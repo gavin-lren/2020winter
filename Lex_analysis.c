@@ -2,29 +2,30 @@
 #include<string.h>
 #include<ctype.h>
 
-int outnum=0;//Êä³öÊı×éÏÂ±ê 
-int tokennum=0;//tokenÊı×éÏÂ±ê 
-int num=0;//Êı×Ö´óĞ¡ 
-char token[1000];//µ¥´Ê×Ö·û´® 
-char now;//µ±Ç°×Ö·û 
+int outnum=0;//è¾“å‡ºæ•°ç»„ä¸‹æ ‡ 
+int tokennum=0;//tokenæ•°ç»„ä¸‹æ ‡ 
+int num=0;//æ•°å­—å¤§å° 
+char token[1000];//å•è¯å­—ç¬¦ä¸² 
+char now;//å½“å‰å­—ç¬¦ 
 char out[16][20]={
 	"Begin", "End", "For", "If", "Then",//0-4 
 	"Else", "Ident", "Int", "Colon", "Plus",//5-9
 	"Star", "Comma", "LParenthesis", "RParenthesis", "Assign",//10-14
 	"Unknown",//15
-};//Êä³öÄÚÈİÊı×é 
+};//è¾“å‡ºå†…å®¹æ•°ç»„ 
 
 void output(){
 	if(outnum == -1){
 		return;
 	}
+	printf("%s", out[outnum]);
 	if(outnum == 6){
-		printf("(%s)\n", token);
+		printf("(%s)", token);
 	}
 	if(outnum == 7){
-		printf("(%d)\n", num);
+		printf("(%d)", num);
 	}
-	printf("%s\n", out[outnum]);
+	printf("\n");
 }
 
 void process(FILE *fp){
@@ -99,15 +100,18 @@ void process(FILE *fp){
 	else if(now == ')'){
 		outnum = 13;
 	}
+	else if(now == EOF){
+		outnum = -1;
+	}
 	else outnum = 15;
 }
 int main(int argc,char *argv[]){
 	FILE *fp = NULL;
-	fp = fopen(argv[1] , "r");//¶ÁÈëÎÄ¼ş 
+	fp = fopen(argv[1] , "r");//è¯»å…¥æ–‡ä»¶ 
 	if(fp == NULL){
 		return 0;
 	}
-	while(outnum !=15){
+	while(outnum !=15 && outnum !=-1){
 		now = fgetc(fp);
 		process(fp);
 		output();
